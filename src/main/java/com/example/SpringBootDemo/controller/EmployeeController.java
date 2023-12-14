@@ -1,9 +1,12 @@
 package com.example.SpringBootDemo.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,6 +30,10 @@ public class EmployeeController {
 		
 	}
 	
+
+
+
+	
 	@PostMapping("/addEmp")
 	public String addEmp(Model model,@RequestParam String id, @RequestParam String name, @RequestParam String designation, @RequestParam String salary) {
 		 
@@ -37,5 +44,29 @@ public class EmployeeController {
 	}
 	
 	
+	@GetMapping("/show")
+	public String showEmployee(Model model) {
+		
+		List<Employee> employees = dao.findAll();
+		model.addAttribute("employeeList", employees);
+		return "info";
+		
+	}
+	
+	@GetMapping("/edit/{id}")
+	public String editEmployee(@PathVariable int id, Model model) {
+		
+		Employee emp=dao.findById(id).orElse(null);
+		
+		model.addAttribute("emp",emp);
+	    return "register";
+	}
+	
+	@GetMapping("/delete/{id}")
+	public String deleteEmployee(@PathVariable int id, Model model) {
+		dao.deleteById(id);
+ 
+		return "redirect:/show";
+	}
 	
 }
